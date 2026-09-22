@@ -64,6 +64,21 @@ class Board:
             index_row += 1
     
     def draw(self):
+        index_row = 0
+        while index_row < self.size:
+            index_col = 0
+            while index_col < self.size:
+                cell_value = self.grid[index_row][index_col]
+                if cell_value == -1:
+                    fill_color = (255, 255, 255)
+                else:
+                    fill_color = PALETTE[cell_value]
+                draw_square(self.ox + index_col * self.cell_size,
+                            self.oy + index_row * self.cell_size,
+                            self.cell_size, fill_color, (0, 0, 0), 2)
+                index_col += 1
+            index_row += 1
+            
     def can_place(self, piece, target_r, target_c):
     def place(self, piece, target_r, target_c):
     
