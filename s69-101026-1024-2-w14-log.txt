@@ -1,0 +1,7 @@
+f6cabb5 (HEAD -> main) finish the class board for clearing line
+2a1a184 add function place and content in function can_place in classBoard
+43a1134 add content in class board (draw)
+17116ea add more content in class Board
+59b77dd add draw square function
+191abd5 Remove A2.py
+dc09276 Change to processing
