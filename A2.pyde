@@ -1,6 +1,6 @@
-# Draft for function designs
-# function design
-# --- CONFIGURATION ---
+import random
+from processing import *
+
 GRID_SIZE = 8
 CELL_SIZE = 48
 BOARD_X = 58
@@ -30,6 +30,21 @@ SHAPE_TEMPLATES = [
     ([(0, 1), (1, 1), (1, 0)], 2),
 ]
 
+def draw_square(x, y, size, fill_color, stroke_color,corner_weight):
+    stroke(fill_color[0],fill_color[1],fill_color[2])
+    strokeWeight(1)
+    offset_y = 0
+    while offset_y < size:
+        line(x, y + offset_y, x + size, y + offset_y)
+        offset_y += 1
+
+    stroke(stroke_color[0], stroke_color[1], stroke_color[2])
+    strokeWeight(corner_weight)
+    line(x,y,x+size,y)              #top
+    line(x+size,y,x+size,y+size)    #bottom
+    line(x+size,y+size,x,y+size)    #right
+    line(x,y+size,x,y)              #left
+    
 class Board:
     def __init__(self, size, cell_size, origin_x, origin_y):
         self.size = size
