@@ -78,10 +78,30 @@ class Board:
                             self.cell_size, fill_color, (0, 0, 0), 2)
                 index_col += 1
             index_row += 1
-            
+
     def can_place(self, piece, target_r, target_c):
+        index = 0
+        while index < len(piece.blocks):
+            block = piece.blocks[index]
+            r = target_r + block[1]
+            c = target_c + block[0]
+            if r < 0 or r >= self.size or c < 0 or c >= self.size:
+                return False
+            if self.grid[r][c] != -1:
+                return False
+            index += 1
+        return True
+
     def place(self, piece, target_r, target_c):
-    
+        if not self.can_place(piece, target_r, target_c):
+            return False
+
+        for block in piece.blocks:
+            r = target_r + block[1]
+            c = target_c + block[0]
+            self.grid[r][c] = piece.color_idx
+        return True
+
     def clear_lines(self):
         rows_to_clear = []
         cols_to_clear = []
