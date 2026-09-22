@@ -44,7 +44,7 @@ def draw_square(x, y, size, fill_color, stroke_color,corner_weight):
     line(x+size,y,x+size,y+size)    #bottom
     line(x+size,y+size,x,y+size)    #right
     line(x,y+size,x,y)              #left
-    
+
 class Board:
     def __init__(self, size, cell_size, origin_x, origin_y):
         self.size = size
@@ -53,6 +53,15 @@ class Board:
         self.oy = origin_y
         
         self.grid = []
+        index_row = 0
+        while index_row < size:
+            row = []
+            index_col = 0
+            while index_col < size:
+                row.append(-1)
+                index_col += 1
+            self.grid.append(row)
+            index_row += 1
     
     def draw(self):
     def can_place(self, piece, target_r, target_c):
