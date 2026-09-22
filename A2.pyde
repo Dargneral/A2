@@ -107,9 +107,25 @@ class Board:
         cols_to_clear = []
 
         # Check full rows
+        row = 0
+        while row < self.size:
+            if all(self.grid[row][col] != -1 for col in range(self.size)):
+                rows_to_clear.append(row)
+            row += 1
         # Check full columns
+        col = 0
+        while col < self.size:
+            if all(self.grid[row][col] != -1 for row in range(self.size)):
+                cols_to_clear.append(col)
+            col += 1
         # Clear detected rows
+        for row in rows_to_clear:
+            for col in range(self.size):
+                self.grid[row][col] = -1
         # Clear detected columns
+        for col in cols_to_clear:
+            for row in range(self.size):
+                self.grid[row][col] = -1
 
 class Piece:
     def __init__(self, blocks, color_idx, anchor_x, anchor_y):
