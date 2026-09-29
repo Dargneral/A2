@@ -1,0 +1,8 @@
+d573bf2 (HEAD -> main) can drag and release blocks
+b415e83 add key for save and load game
+1a096ed add functional that can generate in window
+1efdec4 save game and load game
+b288061 spawn block and detect empty hand
+8e68f9e reset position from dragging
+f0e76ac add the point system for blocks
+b4b0365 drawing blocks
