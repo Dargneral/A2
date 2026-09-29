@@ -1,4 +1,3 @@
-from processing import *
 import random
 
 GRID_SIZE = 8
@@ -360,6 +359,12 @@ def draw():
         text("YOU LOSE", width / 2 - 90, height / 2 - 5)
         textSize(16)
         text("Click to restart", width / 2 - 55, height / 2 + 30)
+
+def keyPressed():
+    if key in ('s', 'S'):
+        save_game()
+    elif key in ('l', 'L'):
+        load_game()
 
 def mousePressed():
     global selected_piece, selected_index, game_over
