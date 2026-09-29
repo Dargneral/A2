@@ -141,6 +141,21 @@ class Piece:
         self.mini_cell = 24
     
     def draw(self):
+        color = PALETTE[self.color_idx]
+        border_color = (0,0,0)
+
+        scale_size = self.mini_cell
+        if self.is_dragging:
+            scale_size = CELL_SIZE
+
+        index = 0
+        while index < len(self.block) :
+            block = self.blocks[index]
+            blockx = self.x + block[0] * scale_size
+            blocky = self.y + block[1] * scale_size
+            draw_square(blockx,blocky,scale_size - 2,color,border_color,1)
+            index = index + 1
+
     def contains_point(self, px, py):
     def reset_pos(self):
 
