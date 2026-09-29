@@ -167,7 +167,11 @@ class Piece:
                     return True
             i = i + 1
         return False
+        
     def reset_pos(self):
+        self.x = self.anchor_x
+        self.y = self.anchor_y
+        self.is_dragging = False
 
 # --- GLOBAL GAME STATE ---
 board = None
