@@ -1,5 +1,5 @@
-import random
 from processing import *
+import random
 
 GRID_SIZE = 8
 CELL_SIZE = 48
@@ -273,13 +273,93 @@ def load_game():
         status_timer = 60
 
 def setup():
-    global board, score, game_over
+    global board, score, combo_streak, combo_msg, combo_timer, game_over, status_notice, status_timer
+    size(500, 600)
+
+    board = Board(GRID_SIZE, CELL_SIZE, BOARD_X, BOARD_Y)
+    score = 0
+    combo_streak = 0
+    combo_msg = ""
+    combo_timer = 0
+    status_notice = ""
+    status_timer = 0
+    game_over = False
+    
+    spawn_hand()
 
 def draw():
-    # Draw selected piece on top
-    if selected_piece != None:
-    # When Game over
+    global combo_timer, combo_y, status_timer
+
+    background(176, 217, 255)
+    # Header HUD
+    fill(40, 40, 40)
+    textSize(22)
+    text("Score: " + str(score), BOARD_X, 36)
+    
+    textSize(12)
+    fill(90, 90, 90)
+    text("[S] Save  |  [L] Load", BOARD_X, 52)
+
+    if combo_streak > 1:
+        fill(245, 93, 62)
+        textSize(18)
+        text("Streak x" + str(combo_streak), width - 140, 36)
+
+    board.draw()
+    
+    # Fast Ghost Placement Preview
+    if selected_piece is not None:
+        cs = board.cell_size
+        target_c = int(round((selected_piece.x - board.ox) / float(cs)))
+        target_r = int(round((selected_piece.y - board.oy) / float(cs)))
+
+        if board.can_place(selected_piece, target_r, target_c):
+            p_color = PALETTE[selected_piece.color_idx]
+            noFill()
+            stroke(p_color[0], p_color[1], p_color[2])
+            strokeWeight(2)
+            
+            for b in selected_piece.blocks:
+                gx = board.ox + (target_c + b[0]) * cs
+                gy = board.oy + (target_r + b[1]) * cs
+                rect(gx, gy, cs - 4, cs - 4)
+
+    # Inactive hand items
+    for p in hand:
+        if p != 0 and not p.is_dragging:
+            p.draw()
+
+    # Dragged item on top
+    if selected_piece is not None:
+        selected_piece.draw()
+
+    # Floating combo feedback
+    if combo_timer > 0:
+        fill(245, 93, 62)
+        textSize(20)
+        text(combo_msg, width / 2 - 80, combo_y)
+        combo_y -= 0.6
+        combo_timer -= 1
+
+    # Save/Load status toast
+    if status_timer > 0:
+        fill(30, 130, 60)
+        textSize(16)
+        text(status_notice, width / 2 - 45, 52)
+        status_timer -= 1
+        
+    # Game over overlay
     if game_over:
+        fill(255, 255, 255, 230)
+        stroke(0)
+        strokeWeight(2)
+        rect(width / 2 - 120, height / 2 - 60, 240, 120)
+            
+        fill(40, 40, 40)
+        textSize(36)
+        text("YOU LOSE", width / 2 - 90, height / 2 - 5)
+        textSize(16)
+        text("Click to restart", width / 2 - 55, height / 2 + 30)
 
 def mousePressed():
     global selected_piece, selected_index, game_over
