@@ -367,13 +367,68 @@ def keyPressed():
         load_game()
 
 def mousePressed():
-    global selected_piece, selected_index, game_over
+    global selected_piece, selected_index
+
+    if game_over:
+        setup()
+        return
+
+    for idx, piece in enumerate(hand):
+        if piece != 0 and piece.contains_point(mouseX, mouseY):
+            selected_piece = piece
+            selected_index = idx
+            piece.is_dragging = True
+            piece.drag_offset_x = mouseX - piece.x
+            piece.drag_offset_y = mouseY - piece.y
+            break
 
 def mouseDragged():
+    if selected_piece is not None:
+        selected_piece.x = mouseX - selected_piece.drag_offset_x
+        selected_piece.y = mouseY - selected_piece.drag_offset_y
 
 def mouseReleased():
-    global selected_piece, selected_index, score, game_over
-    if selected_piece == None:
+    global selected_piece, selected_index, score, combo_streak, combo_msg, combo_timer, combo_y, game_over
+
+    if selected_piece is None:
+        return
+
+    cs = board.cell_size
+    target_c = int(round((selected_piece.x - board.ox) / float(cs)))
+    target_r = int(round((selected_piece.y - board.oy) / float(cs)))
+
     if board.can_place(selected_piece, target_r, target_c):
+        board.place(selected_piece, target_r, target_c)
+        
+        base_points = len(selected_piece.blocks) * 10
+        lines_points = board.clear_lines()
+        
+        if lines_points > 0:
+            combo_streak += 1
+            combo_bonus = (combo_streak - 1) * 50
+            score += base_points + lines_points + combo_bonus
+
+            if combo_streak > 1:
+                combo_msg = "STREAK x" + str(combo_streak) + "! +" + str(lines_points + combo_bonus)
+            else:
+                combo_msg = "LINE CLEAR! +" + str(lines_points)
+            combo_timer = 50
+            combo_y = 50
+        else:
+            combo_streak = 0
+            score += base_points
+
+        hand[selected_index] = 0
+
+        if is_hand_empty():
+            spawn_hand()
+        
+        if check_game_over():
+            game_over = True
+    else:
+        selected_piece.reset_pos()
+
+    selected_piece = None
+    selected_index = -1
     
     
