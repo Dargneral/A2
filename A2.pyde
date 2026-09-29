@@ -177,6 +177,12 @@ class Piece:
 board = None
 hand = [0, 0, 0]
 score = 0
+combo_streak = 0
+combo_msg = ""
+combo_timer = 0
+combo_y = 0
+status_notice = ""
+status_timer = 0
 game_over = False
 selected_piece = None
 selected_index = -1
@@ -192,9 +198,79 @@ def spawn_hand():
 
 def is_hand_empty():
     return all(p == 0 for p in hand)
-    
+
 def check_game_over():
-    global game_over
+    active_pieces = [p for p in hand if p != 0]
+    for piece in active_pieces:
+        for r in range(board.size):
+            for c in range(board.size):
+                if board.can_place(piece, r, c):
+                    return False
+    return True
+
+def save_game():
+    global status_notice, status_timer
+    try:
+        with open(SAVE_FILE, "w") as f:
+            flat_grid = [str(board.grid[r][c]) for r in range(board.size) for c in range(board.size)]
+            f.write(",".join(flat_grid) + "\n")
+            f.write(str(score) + "," + str(combo_streak) + "\n")
+            
+            hand_data = []
+            for p in hand:
+                if p == 0:
+                    hand_data.append("EMPTY")
+                else:
+                    hand_data.append(str(p.template_idx) + ":" + str(p.color_idx))
+            f.write(";".join(hand_data) + "\n")
+            
+        status_notice = "Game Saved!"
+        status_timer = 60
+    except Exception as e:
+        status_notice = "Save Failed!"
+        status_timer = 60
+
+def load_game():
+    global board, score, combo_streak, hand, selected_piece, selected_index, game_over, status_notice, status_timer
+    try:
+        with open(SAVE_FILE, "r") as f:
+            lines = [l.strip() for l in f.readlines()]
+
+        if len(lines) < 3:
+            status_notice = "Corrupt Save!"
+            status_timer = 60
+            return
+
+        cell_vals = lines[0].split(",")
+        idx = 0
+        for r in range(board.size):
+            for c in range(board.size):
+                board.grid[r][c] = int(cell_vals[idx])
+                idx += 1
+
+        score_parts = lines[1].split(",")
+        score = int(score_parts[0])
+        combo_streak = int(score_parts[1]) if len(score_parts) > 1 else 0
+
+        hand_entries = lines[2].split(";")
+        slot_width = width / 3.0
+        for i, entry in enumerate(hand_entries):
+            px = i * slot_width + (slot_width / 2.0) - 30
+            py = 490
+            if entry in ("EMPTY", ""):
+                hand[i] = 0
+            else:
+                t_idx, c_idx = map(int, entry.split(":"))
+                hand[i] = Piece(SHAPE_TEMPLATES[t_idx][0], c_idx, px, py, t_idx)
+
+        selected_piece = None
+        selected_index = -1
+        game_over = check_game_over()
+        status_notice = "Game Loaded!"
+        status_timer = 60
+    except Exception as e:
+        status_notice = "No Save Found!"
+        status_timer = 60
 
 def setup():
     global board, score, game_over
