@@ -109,23 +109,52 @@ class Board:
         # Check full rows
         row = 0
         while row < self.size:
-            if all(self.grid[row][col] != -1 for col in range(self.size)):
+            is_full = True
+            col = 0
+            while col < self.size:
+                if self.grid[row][col] == -1:
+                    is_full = False
+                    break
+                col += 1
+            if is_full:
                 rows_to_clear.append(row)
             row += 1
+
         # Check full columns
         col = 0
         while col < self.size:
-            if all(self.grid[row][col] != -1 for row in range(self.size)):
+            is_full = True
+            row = 0
+            while row < self.size:
+                if self.grid[row][col] == -1:
+                    is_full = False
+                    break
+                row += 1
+            if is_full:
                 cols_to_clear.append(col)
             col += 1
+
         # Clear detected rows
-        for row in rows_to_clear:
-            for col in range(self.size):
+        i = 0
+        while i < len(rows_to_clear):
+            row = rows_to_clear[i]
+            col = 0
+            while col < self.size:
                 self.grid[row][col] = -1
+                col += 1
+            i += 1
+
         # Clear detected columns
-        for col in cols_to_clear:
-            for row in range(self.size):
+        i = 0
+        while i < len(cols_to_clear):
+            col = cols_to_clear[i]
+            row = 0
+            while row < self.size:
                 self.grid[row][col] = -1
+                row += 1
+            i += 1
+
+        return (len(rows_to_clear) + len(cols_to_clear)) * 100
 
 class Piece:
     def __init__(self, blocks, color_idx, anchor_x, anchor_y,template_idx):
@@ -162,8 +191,8 @@ class Piece:
         while i < len(self.blocks):
             block = self.blocks[i]
             block_x = self.x + block[0] * self.mini_cell
-            block_y + self.y + block[1] * self.mini_cell
-            if block_x <= px and px <= block_x + self.minicell:
+            block_y = self.y + block[1] * self.mini_cell
+            if block_x <= px and px <= block_x + self.mini_cell:
                 if block_y <= py and py <= block_y + self.mini_cell:
                     return True
             i = i + 1
