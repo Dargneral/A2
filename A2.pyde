@@ -1,3 +1,4 @@
+from processing import *
 import random
 
 GRID_SIZE = 8
@@ -127,9 +128,10 @@ class Board:
                 self.grid[row][col] = -1
 
 class Piece:
-    def __init__(self, blocks, color_idx, anchor_x, anchor_y):
+    def __init__(self, blocks, color_idx, anchor_x, anchor_y,template_idx):
         self.blocks = blocks
         self.color_idx = color_idx
+        self.template_idx = template_idx
         self.anchor_x = anchor_x
         self.anchor_y = anchor_y
         self.x = anchor_x
@@ -148,7 +150,7 @@ class Piece:
             scale_size = CELL_SIZE
 
         index = 0
-        while index < len(self.block) :
+        while index < len(self.blocks) :
             block = self.blocks[index]
             blockx = self.x + block[0] * scale_size
             blocky = self.y + block[1] * scale_size
@@ -431,4 +433,4 @@ def mouseReleased():
     selected_piece = None
     selected_index = -1
     
-    
+run()
