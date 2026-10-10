@@ -96,10 +96,13 @@ class Board:
         if not self.can_place(piece, target_r, target_c):
             return False
 
-        for block in piece.blocks:
+        index = 0
+        while index < len(piece.blocks):
+            block = piece.blocks[index]
             r = target_r + block[1]
             c = target_c + block[0]
             self.grid[r][c] = piece.color_idx
+            index += 1
         return True
 
     def clear_lines(self):
@@ -262,11 +265,14 @@ def save_game():
             f.write(str(score) + "," + str(combo_streak) + "\n")
             
             hand_data = []
-            for p in hand:
+            i = 0
+            while i < len(hand):
+                p = hand[i]
                 if p == 0:
                     hand_data.append("EMPTY")
                 else:
                     hand_data.append(str(p.template_idx) + ":" + str(p.color_idx))
+                i += 1  
             f.write(";".join(hand_data) + "\n")
             
         status_notice = "Game Saved!"
@@ -288,10 +294,14 @@ def load_game():
 
         cell_vals = lines[0].split(",")
         idx = 0
-        for r in range(board.size):
-            for c in range(board.size):
+        r = 0
+        while r < board.size:
+            c = 0
+            while c < board.size:
                 board.grid[r][c] = int(cell_vals[idx])
                 idx += 1
+                c += 1
+            r += 1
 
         score_parts = lines[1].split(",")
         score = int(score_parts[0])
@@ -299,14 +309,19 @@ def load_game():
 
         hand_entries = lines[2].split(";")
         slot_width = width / 3.0
-        for i, entry in enumerate(hand_entries):
+        i = 0
+        while i < len(hand_entries):
+            entry = hand_entries[i]
             px = i * slot_width + (slot_width / 2.0) - 30
             py = 490
-            if entry in ("EMPTY", ""):
+            if entry == "EMPTY" or entry == "":
                 hand[i] = 0
             else:
-                t_idx, c_idx = map(int, entry.split(":"))
+                parts = entry.split(":")
+                t_idx = int(parts[0])
+                c_idx = int(parts[1])
                 hand[i] = Piece(SHAPE_TEMPLATES[t_idx][0], c_idx, px, py, t_idx)
+            i += 1
 
         selected_piece = None
         selected_index = -1
@@ -370,9 +385,12 @@ def draw():
                 rect(gx, gy, cs - 4, cs - 4)
 
     # Inactive hand items
-    for p in hand:
+    i = 0
+    while i < len(hand):
+        p = hand[i]
         if p != 0 and not p.is_dragging:
             p.draw()
+        i += 1
 
     # Dragged item on top
     if selected_piece is not None:
