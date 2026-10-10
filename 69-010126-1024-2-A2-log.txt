@@ -1,0 +1,25 @@
+de9a5f0 (HEAD -> main, orgin/main) recode while loop
+1db62a9 recode some lines
+b47e962 Remove unneeded files
+add693c Rename log file and add csv
+91e7e08 Rename log file and add csv
+b3ab921 Recode the game over function
+a42ae6b Rename 69-010126-1024-2-w16-log.txt to s69-010126-1024-2-w16-log.txt
+0a919cd add week 16 log
+d0689b2 bug fixed
+0276268 (origin/main) fix bug where blocks not spawn
+555ab3d add w15 log
+d573bf2 can drag and release blocks
+b415e83 add key for save and load game
+1a096ed add functional that can generate in window
+1efdec4 save game and load game
+b288061 spawn block and detect empty hand
+8e68f9e reset position from dragging
+f0e76ac add the point system for blocks
+b4b0365 drawing blocks
+db4b6d4 add changelog w14
+f6cabb5 finish the class board for clearing line
+2a1a184 add function place and content in function can_place in class Board
+43a1134 add content in class board (draw)
+17116ea add more content in class Board
+59b77dd add draw square function
