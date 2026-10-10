@@ -1,2 +1,6 @@
 d0689b2 (HEAD -> main, orgin/main) bug fixed
+<<<<<<< HEAD
 0276268 (origin/main) fix bug where blocks not spawn
+=======
+0276268 (origin/main) fix bug where blocks not spawn
+>>>>>>> a42ae6ba7e787204f509d5cc43641061a1487ab4
