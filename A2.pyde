@@ -219,12 +219,14 @@ selected_index = -1
 
 def spawn_hand():
     slot_width = width / 3.0
-    for idx in range(len(hand)):
+    idx = 0
+    while idx < len(hand):
         t_idx = random.randint(0, len(SHAPE_TEMPLATES) - 1)
         shape_data = SHAPE_TEMPLATES[t_idx]
         px = idx * slot_width + (slot_width / 2.0) - 30
         py = 490
         hand[idx] = Piece(shape_data[0], shape_data[1], px, py, t_idx)
+        idx += 1
 
 def is_hand_empty():
     return all(p == 0 for p in hand)
