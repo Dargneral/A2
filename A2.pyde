@@ -230,12 +230,25 @@ def is_hand_empty():
     return all(p == 0 for p in hand)
 
 def check_game_over():
-    active_pieces = [p for p in hand if p != 0]
-    for piece in active_pieces:
-        for r in range(board.size):
-            for c in range(board.size):
+    active_pieces = []
+    i = 0
+    while i < len(hand):
+        p = hand[i]
+        if p != 0:
+            active_pieces.append(p)
+        i += 1
+    i = 0
+    while i < len(active_pieces):
+        piece = active_pieces[i]
+        r = 0
+        while r < board.size:
+            c = 0
+            while c < board.size:
                 if board.can_place(piece, r, c):
                     return False
+                c += 1
+            r += 1
+        i += 1
     return True
 
 def save_game():
